@@ -1,9 +1,5 @@
 alias vim_shortcuts="open $DOT_FILES/vim-shortcuts.png"
 
 alias dotfiles="cd ~/dotfiles"
-alias install_spoof_mac="git clone https://github.com/feross/SpoofMAC.git ~/SpoofMAC"
-alias generate_mac_address="openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//'"
-alias change_mac_address="sudo python ~/SpoofMAC/SpoofMAC.py en1 `generate_mac_address`"
 alias pbcopy="xclip -selection clipboard"
 alias pbpaste="xclip -selection clipboard -o"
-

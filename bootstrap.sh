@@ -1,112 +1,178 @@
+#!/bin/bash
+read -s -p "Usuário: " username
+read -s -p "Senha padrão: " password
+
+if [ ! $password ] ; then
+	echo "Senha inválida"
+	exit 1
+else
+	echo "Inciando execução. Senha='$password'"
+fi
+
+# Variáveis
+versaoPostgres='9.5'
+HOME="/home/$username"
+
+# Criando diretório temporário
 cd ~
-mkdir tmp
-cd tmp
+mkdir temp
+cd temp
 
-echo # Writting an apt config file
-sudo sh -c 'echo "APT {\nGet {\nAssume-Yes \"true\";\nFix-Broken \"true\";\nForce-Yes \"true\"\n};\n};" > /etc/apt/apt.conf'
+echo "================================================================================"
+echo "[$( date "+%Y/%m/%d %H:%M:%S" )] ADICIONANDO REPOSITÓRIOS E ATUALIZANDO"
+echo "----------------------------------------------"
+add-apt-repository -y ppa:webupd8team/java #Repositório para java
+add-apt-repository ppa:jd-team/jdownloader #Repositório JDownloader
 
-echo # Adding repositories
-sudo apt-add-repository "deb http://archive.canonical.com/ $(lsb_release -sc) partner"
-sudo add-apt-repository ppa:noobslab/initialtesting
-sudo add-apt-repository ppa:indicator-multiload/stable-daily
-sudo add-apt-repository ppa:gnome3-team/gnome3 
-sudo add-apt-repository ppa:webupd8team/java
-sudo add-apt-repository ppa:jd-team/jdownloader 
-sudo apt-key adv --keyserver pgp.mit.edu --recv-keys 5044912E
-sudo add-apt-repository "deb http://linux.dropbox.com/ubuntu precise main"
+# ---------------Repositório PostgresSQL--------------------
+PGDG_LIST='/etc/apt/sources.list.d/pgdg.list'
+REPOSITORIO="deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -suc)-pgdg main"
+touch "$PGDG_LIST"
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+# -------------Fim Repositório PostgresSQL-------------------
 
-sudo apt-get update
+# -------------Repositório Google Chrome---------------------
+GOOGLE_CHROME_LIST='/etc/apt/sources.list.d/google-chrome.list'
+REPOSITORIO="deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main"
+touch "$GOOGLE_CHROME_LIST"
+echo "$REPOSITORIO" | tee -a "$GOOGLE_CHROME_LIST"
+wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+# -------------Fim Repositório Google Chrome---------------------
 
-echo # Updating ubuntu
-sudo apt-get -y upgrade && sudo apt-get dist-upgrade && sudo apt-get -y autoclean && sudo apt-get -y autoremove
+# -------------Repositório Skype---------------------
+SKYPE_LIST="/etc/apt/sources.list.d/skype.list"
+REPOSITORIO="deb http://archive.canonical.com/ $(lsb_release -suc) partner"
+touch "$SKYPE_LIST"
+echo "$REPOSITORIO" | tee -a "$SKYPE_LIST"
+# -------------Repositório Skype---------------------
 
-echo # Showing name on Status Bar
-gsettings set com.canonical.indicator.session show-real-name-on-panel true
+apt-get update
+apt-get upgrade
 
-echo # Show Battery percentage
-sudo apt-get install indicator-power
+echo "================================================================================"
+echo "[$( date "+%Y/%m/%d %H:%M:%S" )] APLICATIVOS ESSENCIAIS"
+echo "----------------------------------------------"
+apt-get install -y p7zip-rar p7zip-full unace unrar zip unzip sharutils rar
+apt-get install -y vim
+apt-get install -y curl
+apt-get install -y xclip
+apt-get install -y openssh-server
+apt-get install -y sshpass
+apt-get install -y nmap
+apt-get install -y nmon
+apt-get install -y fcitx
+apt-get install -y zram-config
+apt-get install -y htop
 
-echo # HW temperature
-sudo apt-get install lm-sensors hddtemp psensor
-
-echo # Flash Plugin
-sudo apt-get install flashplugin-installer
-
-echo # Compression Decompression Tools
-sudo apt-get install p7zip-rar p7zip-full unace unrar zip unzip sharutils rar uudeview mpack lha arj cabextract file-roller
-
-echo # Installing Essential Softwares
-sudo apt-get install ubuntu-restricted-extras
-sudo wget --output-document=/etc/apt/sources.list.d/medibuntu.list http://www.medibuntu.org/sources.list.d/$(lsb_release -cs).list && sudo apt-get --quiet update && sudo apt-get --yes --quiet --allow-unauthenticated install medibuntu-keyring && sudo apt-get --quiet update
-sudo apt-get install libdvdcss
-sudo apt-get install vim
-sudo apt-get install terminator
-sudo apt-get install curl
-sudo apt-get install xclip
-sudo apt-get install autojump
-
-echo #Dropbox
-sudo apt-get install nautilus-dropbox
-
-echo #Google Chrome
+echo "================================================================================"
+echo "[$( date "+%Y/%m/%d %H:%M:%S" )] GOOGLE CHROME"
+echo "----------------------------------------------"
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-sudo dpkg -i **google-chrome*.deb
-sudo apt-get -f install
+dpkg -i **google-chrome*.deb
+apt-get -f install
 
-echo #TeamViewer
+echo "================================================================================"
+echo "[$( date "+%Y/%m/%d %H:%M:%S" )] JAVA 7 e 8"
+echo "----------------------------------------------"
+apt-get install oracle-jdk7-installer -y
+apt-get install oracle-java8-installer -y
 
-echo #CPU Memory Indicator Applet
-sudo apt-get install indicator-multiload
+echo "================================================================================"
+echo "[$( date "+%Y/%m/%d %H:%M:%S" )] JDOWNLOADER"
+echo "----------------------------------------------"
+apt-get install jdownloader -y
 
-echo #Nautilus
-killall nautilus
+echo "================================================================================"
+echo "[$( date "+%Y/%m/%d %H:%M:%S" )] GIT"
+echo "----------------------------------------------"
+apt-get install git
 
-#Steam
-#sudo apt-get install steam
+echo "================================================================================"
+echo "[$( date "+%Y/%m/%d %H:%M:%S" )] POSTGRESQL"
+echo "----------------------------------------------"
+apt-get install -y postgresql-${versaoPostgres} postgresql-server-dev-${versaoPostgres} postgresql-contrib-${versaoPostgres} pgadmin3
+sudo -u postgres psql --command="ALTER USER postgres WITH PASSWORD '$password';"
 
-echo # Java
-sudo apt-get install oracle-jdk7-installer -y
+echo "================================================================================"
+echo "[$( date "+%Y/%m/%d %H:%M:%S" )] MYSQL"
+echo "----------------------------------------------"
+apt-get install mysql-client mysql-server
+mysqladmin -u root password $password
 
-echo # JDownload
-sudo apt-get install jdownloader -y
+echo "================================================================================"
+echo "[$( date "+%Y/%m/%d %H:%M:%S" )] REDIS"
+echo "----------------------------------------------"
+apt-get install redis-server
 
-echo # Other util softwares
-sudo apt-get install vlc deluge bleachbit xchat trimage filezilla -y
+echo "================================================================================"
+echo "[$( date "+%Y/%m/%d %H:%M:%S" )] SKYPE"
+echo "----------------------------------------------"
+apt-get install -y skype
 
-echo # Installing VCS
-sudo apt-get install git
-sudo apt-get install subversion
-
-echo # Installing Ruby Env
-sudo apt-get install build-essential bison openssl libreadline5 libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libsqlite3-0 libsqlite3-dev sqlite3 libxml2-dev libmysqlclient-dev libxslt-dev autoconf libc6-dev ncurses-dev libtool libyaml-dev libcurl4-openssl-dev libpcre3 libpcre3-dev libgdbm-dev  libffi-dev
-echo # RVM
-curl -L https://get.rvm.io | bash -s stable --rails
-
-
-echo # Databases
-sudo apt-get install mysql-client mysql-server
-sudo apt-get install postgresql pgadmin3
-sudo apt-get install redis-server
-
-
-echo # Zsh
-sudo apt-get install zsh
-chsh -s `which zsh`
-wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh
+SYSCTL_CONFIG=$( cat << EOF
+vm.swappiness=10
+fs.inotify.max_user_watches = 524288
+EOF
+)
+echo "$SYSCTL_CONFIG" | tee -a '/etc/sysctl.conf'
+sysctl -p > /dev/null
 
 
-echo # Installing Janus
-curl -Lo- https://bit.ly/janus-bootstrap | bash
+LIMITS_CONF='/etc/security/limits.conf'
+CONFIGURACAO_FILES=$( cat << EOF
+*  soft  nofile 9000
+*  hard  nofile 65000
+EOF
+)
+echo "$CONFIGURACAO_FILES" | tee -a "$LIMITS_CONF"
 
-echo # Installing Pathogen
-mkdir -p ~/.vim/autoload ~/.vim/bundle; \
-curl -so ~/.vim/autoload/pathogen.vim \
-    https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
+COMMON_SESSION='/etc/pam.d/common-session'
+CONFIGURACAO_SESSION=$( cat << EOF
+session required pam_limits.so
+EOF
+)
+echo "$CONFIGURACAO_SESSION" | tee -a "$COMMON_SESSION"
 
-echo # Installing vim-colors-solarized
-git clone git://github.com/altercation/vim-colors-solarized.git ~/.vim/bundle/
+echo "================================================================================"
+echo "[$( date "+%Y/%m/%d %H:%M:%S" )] INTELLIJ IDEA"
+echo "----------------------------------------------"
+NOME='Intellij Idea'
+VERSAO_DESEJADA="2016.1.3"
+BUILD_DESEJADA="IU-145.1617.8"
+URL_DOWNLOAD="https://download.jetbrains.com/idea/ideaIU-${VERSAO_DESEJADA}.tar.gz"
 
-echo # Downloading dotfiles
-git clone git@github.com:halissonvit/dotfiles.git ~/dotfiles
-echo # Symlinking config files
-ln -s ~/dotfiles/.** ~/
+PASTA_INSTALACAO="${HOME}/idea"
+echo "Baixando ${NOME} ${VERSAO_DESEJADA}"
+mkdir -p "${PASTA_INSTALACAO}"
+wget -O - "${URL_DOWNLOAD}" | tar xz --strip=1 -f -  -C "${PASTA_INSTALACAO}"
+
+VERSAO=2016.1.3
+NOME_APLICACAO="IntelliJ IDEA"
+PASTA=${HOME}/idea
+ARQUIVO_CONFIGURACAO="${HOME}/.local/share/applications/intellijidea.desktop"
+
+CONTEUDO_CONFIGURACAO=$( cat << EOF
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=${VERSAO}
+Type=Application
+Terminal=false
+Exec=${PASTA}/bin/idea.sh
+Name=${NOME_APLICACAO} ${VERSAO}
+Icon=${PASTA}/bin/idea.png
+StartupWMClass=jetbrains-idea
+EOF
+)
+sudo touch "$ARQUIVO_CONFIGURACAO"
+sudo rm -f $ARQUIVO_CONFIGURACAO
+echo "$CONTEUDO_CONFIGURACAO" | sudo tee -a "$ARQUIVO_CONFIGURACAO"
+
+echo "================================================================================"
+echo "[$( date "+%Y/%m/%d %H:%M:%S" )] OBTENDO DOTFILES"
+echo "----------------------------------------------"
+mkdir -p ~/workspace/cleydsonjr/
+sudo -u $username git clone git@github.com:cleydsonjr/dotfiles.git $HOME/workspace/cleydsonjr/dotfiles
+sudo -u $username ln -s ~/workspace/cleydsonjr/dotfiles/.** ~/
+
+cd ~
+rm -rf temp
