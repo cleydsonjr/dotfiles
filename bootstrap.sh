@@ -83,7 +83,7 @@ apt-get install jdownloader -y
 echo "================================================================================"
 echo "[$( date "+%Y/%m/%d %H:%M:%S" )] GIT"
 echo "----------------------------------------------"
-apt-get install git
+apt-get install -y git
 
 echo "================================================================================"
 echo "[$( date "+%Y/%m/%d %H:%M:%S" )] POSTGRESQL"
@@ -94,13 +94,13 @@ sudo -u postgres psql --command="ALTER USER postgres WITH PASSWORD '$password';"
 echo "================================================================================"
 echo "[$( date "+%Y/%m/%d %H:%M:%S" )] MYSQL"
 echo "----------------------------------------------"
-apt-get install mysql-client mysql-server
+apt-get install -y mysql-client mysql-server
 mysqladmin -u root password $password
 
 echo "================================================================================"
 echo "[$( date "+%Y/%m/%d %H:%M:%S" )] REDIS"
 echo "----------------------------------------------"
-apt-get install redis-server
+apt-get -y install redis-server
 
 echo "================================================================================"
 echo "[$( date "+%Y/%m/%d %H:%M:%S" )] SKYPE"
