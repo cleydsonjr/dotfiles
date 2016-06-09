@@ -67,9 +67,7 @@ apt-get install -y htop
 echo "================================================================================"
 echo "[$( date "+%Y/%m/%d %H:%M:%S" )] GOOGLE CHROME"
 echo "----------------------------------------------"
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-dpkg -i **google-chrome*.deb
-apt-get -f install
+sudo apt-get install -y google-chrome-stable
 
 echo "================================================================================"
 echo "[$( date "+%Y/%m/%d %H:%M:%S" )] JAVA 7 e 8"
