@@ -107,6 +107,16 @@ echo "[$( date "+%Y/%m/%d %H:%M:%S" )] SKYPE"
 echo "----------------------------------------------"
 apt-get install -y skype
 
+echo "================================================================================"
+echo "[$( date "+%Y/%m/%d %H:%M:%S" )] BYOBU"
+echo "----------------------------------------------"
+sudo apt-get install -y byobu
+
+echo "================================================================================"
+echo "[$( date "+%Y/%m/%d %H:%M:%S" )] SDKMAN"
+echo "----------------------------------------------"
+curl -s "https://get.sdkman.io" | sudo -u $username bash
+
 SYSCTL_CONFIG=$( cat << EOF
 vm.swappiness=10
 fs.inotify.max_user_watches = 524288
@@ -168,9 +178,9 @@ echo "$CONTEUDO_CONFIGURACAO" | sudo tee -a "$ARQUIVO_CONFIGURACAO"
 echo "================================================================================"
 echo "[$( date "+%Y/%m/%d %H:%M:%S" )] OBTENDO DOTFILES"
 echo "----------------------------------------------"
-mkdir -p ~/workspace/cleydsonjr/
+sudo -u $username mkdir -p ~/workspace/cleydsonjr/
 sudo -u $username git clone git@github.com:cleydsonjr/dotfiles.git $HOME/workspace/cleydsonjr/dotfiles
-sudo -u $username ln -s ~/workspace/cleydsonjr/dotfiles/.** ~/
+sudo -u $username ln -s $HOME/workspace/cleydsonjr/dotfiles/.gitconfig ~/
 
 cd ~
 rm -rf temp
