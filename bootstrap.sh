@@ -63,6 +63,8 @@ apt-get install -y nmon
 apt-get install -y fcitx
 apt-get install -y zram-config
 apt-get install -y htop
+apt-get install -y gnome-disk-utility
+
 
 echo "================================================================================"
 echo "[$( date "+%Y/%m/%d %H:%M:%S" )] GOOGLE CHROME"
