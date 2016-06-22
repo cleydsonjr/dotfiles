@@ -46,6 +46,9 @@ touch "$SKYPE_LIST"
 echo "$REPOSITORIO" | tee -a "$SKYPE_LIST"
 # -------------Repositório Skype---------------------
 
+sed -i "/^# deb .*partner/ s/^# //" /etc/apt/sources.list
+add-apt-repository ppa:mpstark/elementary-tweaks-daily
+
 apt-get update
 apt-get upgrade
 
@@ -63,7 +66,11 @@ apt-get install -y nmon
 apt-get install -y fcitx
 apt-get install -y zram-config
 apt-get install -y htop
+apt-get install -y gparted
 apt-get install -y gnome-disk-utility
+apt-get install -y dconf-tools
+apt-get install -y elementary-tweaks
+apt-get install -y ubuntu-restricted-extra
 
 
 echo "================================================================================"
