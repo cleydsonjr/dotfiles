@@ -47,7 +47,8 @@ echo "$REPOSITORIO" | tee -a "$SKYPE_LIST"
 # -------------Repositório Skype---------------------
 
 sed -i "/^# deb .*partner/ s/^# //" /etc/apt/sources.list
-add-apt-repository ppa:mpstark/elementary-tweaks-daily
+add-apt-repository -y ppa:mpstark/elementary-tweaks-daily
+add-apt-repository -y ppa:diodon-team/stable
 
 apt-get update
 apt-get upgrade
@@ -71,6 +72,7 @@ apt-get install -y gnome-disk-utility
 apt-get install -y dconf-tools
 apt-get install -y elementary-tweaks
 apt-get install -y ubuntu-restricted-extra
+apt-get install -y diodon
 
 
 echo "================================================================================"
@@ -133,7 +135,6 @@ EOF
 )
 echo "$SYSCTL_CONFIG" | tee -a '/etc/sysctl.conf'
 sysctl -p > /dev/null
-
 
 LIMITS_CONF='/etc/security/limits.conf'
 CONFIGURACAO_FILES=$( cat << EOF
