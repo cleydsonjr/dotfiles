@@ -28,6 +28,7 @@ add-apt-repository ppa:jd-team/jdownloader #Repositório JDownloader
 PGDG_LIST='/etc/apt/sources.list.d/pgdg.list'
 REPOSITORIO="deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -suc)-pgdg main"
 touch "$PGDG_LIST"
+echo "$REPOSITORIO" | tee -a "$PGDG_LIST"
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 # -------------Fim Repositório PostgresSQL-------------------
 
@@ -49,6 +50,14 @@ echo "$REPOSITORIO" | tee -a "$SKYPE_LIST"
 sed -i "/^# deb .*partner/ s/^# //" /etc/apt/sources.list
 add-apt-repository -y ppa:mpstark/elementary-tweaks-daily
 add-apt-repository -y ppa:diodon-team/stable
+
+# -------------Repositório Docker---------------------
+apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+DOCKER_LIST="/etc/apt/sources.list.d/docker.list"
+REPOSITORIO="deb https://apt.dockerproject.org/repo ubuntu-$(lsb_release -suc) main"
+touch "$DOCKER_LIST"
+echo "$REPOSITORIO" | tee -a "$DOCKER_LIST"
+# -------------Repositório Docker---------------------
 
 apt-get update
 apt-get upgrade
@@ -73,7 +82,13 @@ apt-get install -y dconf-tools
 apt-get install -y elementary-tweaks
 apt-get install -y ubuntu-restricted-extra
 apt-get install -y diodon
+apt-get install -y apt-transport-https ca-certificates #docker
+apt-get install -y linux-image-extra-$(uname -r) #docker
+apt-get install -y docker-engine #docker
 
+usermod -aG docker $username
+
+wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
 
 echo "================================================================================"
 echo "[$( date "+%Y/%m/%d %H:%M:%S" )] GOOGLE CHROME"
@@ -103,9 +118,9 @@ apt-get install -y postgresql-${versaoPostgres} postgresql-server-dev-${versaoPo
 sudo -u postgres psql --command="ALTER USER postgres WITH PASSWORD '$password';"
 
 echo "================================================================================"
-echo "[$( date "+%Y/%m/%d %H:%M:%S" )] MYSQL"
+echo "[$( date "+%Y/%m/%d %H:%M:%S" )] MYSQL CLIENT"
 echo "----------------------------------------------"
-apt-get install -y mysql-client mysql-server
+apt-get install -y mysql-client
 mysqladmin -u root password $password
 
 echo "================================================================================"

@@ -21,3 +21,4 @@
   ui = auto
 [core]
   editor = /usr/bin/vim
+	autocrlf = input
