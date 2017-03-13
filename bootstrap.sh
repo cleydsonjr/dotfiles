@@ -18,14 +18,14 @@ cd ~
 mkdir temp
 cd temp
 
-apt-get update
+apt-get -y update
 apt-get install -y software-properties-common
 
 echo "================================================================================"
 echo "[$( date "+%Y/%m/%d %H:%M:%S" )] ADICIONANDO REPOSITÓRIOS E ATUALIZANDO"
 echo "----------------------------------------------"
 add-apt-repository -y ppa:webupd8team/java #Repositório para java
-add-apt-repository ppa:jd-team/jdownloader #Repositório JDownloader
+add-apt-repository -y ppa:jd-team/jdownloader #Repositório JDownloader
 
 # ---------------Repositório PostgresSQL--------------------
 PGDG_LIST='/etc/apt/sources.list.d/pgdg.list'
@@ -62,8 +62,8 @@ touch "$DOCKER_LIST"
 echo "$REPOSITORIO" | tee -a "$DOCKER_LIST"
 # -------------Repositório Docker---------------------
 
-apt-get update
-apt-get upgrade
+apt-get -y update
+apt-get -y upgrade
 
 echo "================================================================================"
 echo "[$( date "+%Y/%m/%d %H:%M:%S" )] APLICATIVOS ESSENCIAIS"
