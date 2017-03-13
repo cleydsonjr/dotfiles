@@ -18,6 +18,9 @@ cd ~
 mkdir temp
 cd temp
 
+apt-get update
+apt-get install -y software-properties-common
+
 echo "================================================================================"
 echo "[$( date "+%Y/%m/%d %H:%M:%S" )] ADICIONANDO REPOSITÓRIOS E ATUALIZANDO"
 echo "----------------------------------------------"
@@ -48,7 +51,7 @@ echo "$REPOSITORIO" | tee -a "$SKYPE_LIST"
 # -------------Repositório Skype---------------------
 
 sed -i "/^# deb .*partner/ s/^# //" /etc/apt/sources.list
-add-apt-repository -y ppa:mpstark/elementary-tweaks-daily
+add-apt-repository -y ppa:philip.scott/elementary-tweaks
 add-apt-repository -y ppa:diodon-team/stable
 
 # -------------Repositório Docker---------------------
@@ -80,11 +83,13 @@ apt-get install -y gparted
 apt-get install -y gnome-disk-utility
 apt-get install -y dconf-tools
 apt-get install -y elementary-tweaks
-apt-get install -y ubuntu-restricted-extra
 apt-get install -y diodon
 apt-get install -y apt-transport-https ca-certificates #docker
 apt-get install -y linux-image-extra-$(uname -r) #docker
 apt-get install -y docker-engine #docker
+apt-get install -y gdebi
+apt-get install -y tlp tlp-rdw
+apt-get install -y redshift
 
 usermod -aG docker $username
 
