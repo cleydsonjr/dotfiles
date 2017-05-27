@@ -26,6 +26,7 @@ echo "[$( date "+%Y/%m/%d %H:%M:%S" )] ADICIONANDO REPOSITÓRIOS E ATUALIZANDO"
 echo "----------------------------------------------"
 add-apt-repository -y ppa:webupd8team/java #Repositório para java
 add-apt-repository -y ppa:jd-team/jdownloader #Repositório JDownloader
+add-apt-repository -y ppa:transmissionbt/ppa
 
 # ---------------Repositório PostgresSQL--------------------
 PGDG_LIST='/etc/apt/sources.list.d/pgdg.list'
@@ -90,6 +91,7 @@ apt-get install -y docker-engine #docker
 apt-get install -y gdebi
 apt-get install -y tlp tlp-rdw
 apt-get install -y redshift
+apt-get install -y transmission
 
 usermod -aG docker $username
 
